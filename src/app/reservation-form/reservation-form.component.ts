@@ -8,9 +8,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ReservationFormComponent implements OnInit {
   reservationForm: FormGroup = new FormGroup({});
+  // can also be initialized as reservationForm!: FormGroup
+  // to indicate it will be initialized in OnInit;
 
   //Dependency injection: Form Builder instance is injected into the component
-  //private to ensure only accesible within this component. ENCAPSULATION
+  //private to ensure only accesible within this component.
   constructor(private formBuilder: FormBuilder) {}
 
   ngOnInit(): void {
