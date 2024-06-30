@@ -1,1 +1,17 @@
-<p>reservation-list works!</p>
+<h2>Reservation list</h2>
+
+<!--Conditional rendering using ngIf and ng template noReservation-->
+
+<ul *ngIf="reservations.length; else noReservation">
+  <li *ngFor="let reservation of reservations">
+    Guest: {{ reservation.guestName }}<br />
+    E-Mail: {{ reservation.guestEmail }}<br />
+    Room No.: {{ reservation.roomNumber }}<br />
+    Check-In: {{ reservation.checkInDate }}<br />
+    Guest: {{ reservation.checkOutDate }}<br />
+  </li>
+</ul>
+
+<ng-template #noReservation>
+  <p>No Reservation Available</p>
+</ng-template>

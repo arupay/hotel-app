@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ReservationService } from '../reservation/reservation.service';
+import { Reservation } from '../models/reservation';
 
 @Component({
   selector: 'app-reservation-form',
@@ -13,7 +15,10 @@ export class ReservationFormComponent implements OnInit {
 
   //Dependency injection: Form Builder instance is injected into the component
   //private to ensure only accesible within this component.
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private reservationService: ReservationService
+  ) {}
 
   ngOnInit(): void {
     //lifecycle hook used to initialize the reservation form group using the formBuilderservice.
@@ -28,7 +33,8 @@ export class ReservationFormComponent implements OnInit {
 
   onSubmit() {
     if (this.reservationForm.valid) {
-      console.log('valid');
+      let reservation: Reservation = this.reservationForm.value; // create a reservation out of the values of the form
+      this.reservationService.addReservation(reservation);
     }
   }
 }
