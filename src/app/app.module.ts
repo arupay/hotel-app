@@ -7,7 +7,8 @@ import { HomeModule } from './home/home.module';
 import { ReservationModule } from './reservation/reservation.module';
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, AppRoutingModule, HomeModule, ReservationModule],
+  imports: [BrowserModule, AppRoutingModule, HomeModule],
+  // imports: [BrowserModule, AppRoutingModule, HomeModule, ReservationModule],
   providers: [],
   bootstrap: [AppComponent],
 })

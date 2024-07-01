@@ -15,7 +15,10 @@ export class ReservationListComponent implements OnInit {
 
   ngOnInit(): void {
     this.reservations = this.reservationService.getReservations();
-    //ngoninit is a lifecycle hook called after the data bound properties are initialized 
+    //ngoninit is a lifecycle hook called after the data bound properties are initialized
     //but BEFORE rendering the view.
+  }
+  deleteReservation(id: string) {
+    this.reservationService.deleteReservation(id);
   }
 }

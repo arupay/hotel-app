@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReservationService } from '../reservation/reservation.service';
 import { Reservation } from '../models/reservation';
+import { Router, ActivatedRoute } from '@angular/router';
+//activatedroute is what you see at the browser level
 
 @Component({
   selector: 'app-reservation-form',
@@ -17,7 +19,9 @@ export class ReservationFormComponent implements OnInit {
   //private to ensure only accesible within this component.
   constructor(
     private formBuilder: FormBuilder,
-    private reservationService: ReservationService
+    private reservationService: ReservationService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -29,12 +33,29 @@ export class ReservationFormComponent implements OnInit {
       guestName: ['', Validators.required],
       roomNumber: ['', Validators.required],
     });
+
+    let id = this.activatedRoute.snapshot.paramMap.get('id');
+    //gets id from route similar to getParams on react
+    if (id) {
+      let reservation = this.reservationService.getReservation(id);
+      //fetch reservation from current data that matches id
+      if (reservation) this.reservationForm.patchValue(reservation);
+      // if this reservation exists (will get error if not in ifclause due to TS constraints)
+    }
   }
 
   onSubmit() {
     if (this.reservationForm.valid) {
       let reservation: Reservation = this.reservationForm.value; // create a reservation out of the values of the form
-      this.reservationService.addReservation(reservation);
+
+      let id = this.activatedRoute.snapshot.paramMap.get('id');
+      //gets id from route similar to getParams on react
+      if (id) {
+        this.reservationService.updateReservation(id, reservation);
+      } else {
+        this.reservationService.addReservation(reservation);
+      }
     }
+    this.router.navigate(['/list']);
   }
 }
