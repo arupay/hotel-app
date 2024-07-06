@@ -1,40 +1,43 @@
 import { Injectable } from '@angular/core';
 import { Reservation } from '../models/reservation';
+import { HttpClient } from '@angular/common/http'; //THIS IS WHAT WE USE TO SEND HTTP REQUEST TO MOCKOON/BACKEND
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReservationService {
+  private apiURL = 'http://localhost:3001'; //MOCKOON URL
+
   private reservations: Reservation[] = [];
 
-  constructor() {
-    let savedReservations = localStorage.getItem('reservations');
-    this.reservations = savedReservations ? JSON.parse(savedReservations) : [];
-  }
+  constructor(private http: HttpClient) {}
 
   //crud operations
-  getReservations(): Reservation[] {
-    return this.reservations;
+  getReservations(): Observable<Reservation[]> {
+    return this.http.get<Reservation[]>(this.apiURL + '/reservations');
   }
-  getReservation(id: string): Reservation | undefined {
-    return this.reservations?.find((res) => (res.id = id));
-  }
-
-  addReservation(reservation: Reservation): void {
-    reservation.id = Date.now().toString();
-    this.reservations.push(reservation);
-    localStorage.setItem('reservations', JSON.stringify(this.reservations));
+  getReservation(id: string): Observable<Reservation> {
+    return this.http.get<Reservation>(this.apiURL + '/reservation/' + id);
   }
 
-  deleteReservation(id: string): void {
-    let index = this.reservations.findIndex((res) => res.id === id);
-    this.reservations.splice(index, 1);
-    localStorage.setItem('reservations', JSON.stringify(this.reservations));
+  addReservation(reservation: Reservation): Observable<void> {
+    return this.http.post<void>(this.apiURL + '/reservations', reservation); // PASSING A RESERVATION MUST PUT COMMA FOR BODY
+
+    // this.reservations.push(reservation);
   }
 
-  updateReservation(id: string, updatedReservation: Reservation): void {
-    let index = this.reservations.findIndex((res) => res.id === id);
-    this.reservations[index] = updatedReservation;
-    localStorage.setItem('reservations', JSON.stringify(this.reservations));
+  deleteReservation(id: string): Observable<void> {
+    return this.http.delete<void>(this.apiURL + '/reservations/' + id);
+  }
+
+  updateReservation(
+    id: string,
+    updatedReservation: Reservation
+  ): Observable<void> {
+    return this.http.put<void>(
+      this.apiURL + '/reservations/' + id,
+      updatedReservation
+    );
   }
 }

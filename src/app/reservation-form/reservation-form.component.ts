@@ -37,10 +37,13 @@ export class ReservationFormComponent implements OnInit {
     let id = this.activatedRoute.snapshot.paramMap.get('id');
     //gets id from route similar to getParams on react
     if (id) {
-      let reservation = this.reservationService.getReservation(id);
+      let reservation = this.reservationService
+        .getReservation(id)
+        .subscribe((reservation) => {
+          if (reservation) this.reservationForm.patchValue(reservation);
+          // if this reservation exists (will get error if not in ifclause due to TS constraints)
+        });
       //fetch reservation from current data that matches id
-      if (reservation) this.reservationForm.patchValue(reservation);
-      // if this reservation exists (will get error if not in ifclause due to TS constraints)
     }
   }
 
@@ -51,9 +54,13 @@ export class ReservationFormComponent implements OnInit {
       let id = this.activatedRoute.snapshot.paramMap.get('id');
       //gets id from route similar to getParams on react
       if (id) {
-        this.reservationService.updateReservation(id, reservation);
+        this.reservationService
+          .updateReservation(id, reservation)
+          .subscribe(() => console.log('update request processed'));
       } else {
-        this.reservationService.addReservation(reservation);
+        this.reservationService.addReservation(reservation).subscribe(() => {
+          console.log('resevertaion added');
+        });
       }
     }
     this.router.navigate(['/list']);

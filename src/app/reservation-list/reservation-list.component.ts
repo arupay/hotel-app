@@ -14,11 +14,15 @@ export class ReservationListComponent implements OnInit {
   //INJECTING an instance of reservationservice into this component!
 
   ngOnInit(): void {
-    this.reservations = this.reservationService.getReservations();
+    this.reservationService.getReservations().subscribe((reservations) => {
+      this.reservations = reservations;
+    });
     //ngoninit is a lifecycle hook called after the data bound properties are initialized
     //but BEFORE rendering the view.
   }
   deleteReservation(id: string) {
-    this.reservationService.deleteReservation(id);
+    this.reservationService
+      .deleteReservation(id)
+      .subscribe(() => console.log('successful delete'));
   }
 }
